@@ -58,15 +58,17 @@ namespace RUT::MIIT {
             return head == nullptr;
         }
 
-        std::string toString() const {
-            std::string result;
+        std::string ToString(Node* head) {
+            std::ostringstream oss; 
             Node* current = head;
+
             while (current) {
-                result += std::to_string(current->data) + " -> ";
-                current = current->next;
+                oss << current->data << " -> "; 
+                current = current->next; 
             }
-            result += "null";
-            return result;
+
+            oss << "null"; 
+            return oss.str(); 
         }
 
         void push_back(T value) {
@@ -112,30 +114,30 @@ namespace RUT::MIIT {
             delete temp;
         }
 
-        void insert(int idx, T elem) {
+        void insert(size_t idx, T elem) {
             if (idx < 0) throw std::out_of_range("Index cannot be negative");
             if (idx == 0) {
                 push_front(elem);
                 return;
             }
             Node* current = head;
+            if (current == nullptr) throw std::out_of_range("Index exceeds list size");
             for (int i = 0; current != nullptr && i < idx - 1; ++i) {
                 current = current->next;
             }
-            if (current == nullptr) throw std::out_of_range("Index exceeds list size");
             Node* newNode = new Node(elem);
             newNode->next = current->next;
             current->next = newNode;
         }
 
-        void remove(int idx) {
+        void remove(size_t idx) {
             if (idx < 0 || isEmpty()) throw std::out_of_range("Invalid index");
             if (idx == 0) {
                 pop_front();
                 return;
             }
             Node* current = head;
-            for (int i = 0; current != nullptr && i < idx - 1; ++i) {
+            for (size_t i = 0; current != nullptr && i < idx - 1; ++i) {
                 current = current->next;
             }
             if (current == nullptr || current->next == nullptr) throw std::out_of_range("Index exceeds list size");
