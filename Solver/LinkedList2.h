@@ -18,7 +18,7 @@ namespace RUT::MIIT {
         Node* head;
 
     public:
-        LinkedList() : head(nullptr) {}
+        LinkedList() {}
 
         LinkedList(std::initializer_list<T> values) : head(nullptr) {
             for (const auto& value : values) {
@@ -26,7 +26,7 @@ namespace RUT::MIIT {
             }
         }
 
-        LinkedList(const LinkedList& other) : head(nullptr) {
+        LinkedList(const LinkedList& other) {
             Node* current = other.head;
             while (current) {
                 push_back(current->data);
@@ -34,7 +34,7 @@ namespace RUT::MIIT {
             }
         }
 
-        LinkedList(LinkedList&& other) noexcept : head(other.head) {
+        LinkedList(LinkedList&& other) noexcept {
             other.head = nullptr;
         }
 
@@ -43,16 +43,10 @@ namespace RUT::MIIT {
         }
 
         LinkedList& operator=(const LinkedList& other) {
-            if (this != &other) {
-                clear();
-                Node* current = other.head;
-                while (current) {
-                    push_back(current->data);
-                    current = current->next;
-                }
-            }
+            swap(*this, other);
             return *this;
         }
+
 
         bool isEmpty() const {
             return head == nullptr;
@@ -85,7 +79,7 @@ namespace RUT::MIIT {
             }
         }
 
-        void push_front(T value) {
+        void push_front(T value const) {
             Node* newNode = new Node(value);
             newNode->next = head;
             head = newNode;
@@ -115,14 +109,13 @@ namespace RUT::MIIT {
         }
 
         void insert(size_t idx, T elem) {
-            if (idx < 0) throw std::out_of_range("Index cannot be negative");
             if (idx == 0) {
                 push_front(elem);
                 return;
             }
             Node* current = head;
             if (current == nullptr) throw std::out_of_range("Index exceeds list size");
-            for (int i = 0; current != nullptr && i < idx - 1; ++i) {
+            for (size_t i = 0; current != nullptr && i < idx - 1; ++i) {
                 current = current->next;
             }
             Node* newNode = new Node(elem);
@@ -131,7 +124,7 @@ namespace RUT::MIIT {
         }
 
         void remove(size_t idx) {
-            if (idx < 0 || isEmpty()) throw std::out_of_range("Invalid index");
+            if ( isEmpty()) throw std::out_of_range("Invalid index");
             if (idx == 0) {
                 pop_front();
                 return;
@@ -140,7 +133,7 @@ namespace RUT::MIIT {
             for (size_t i = 0; current != nullptr && i < idx - 1; ++i) {
                 current = current->next;
             }
-            if (current == nullptr || current->next == nullptr) throw std::out_of_range("Index exceeds list size");
+            if (current == nullptr) throw std::out_of_range("Index exceeds list size");
             Node* temp = current->next;
             current->next = temp->next;
             delete temp;
