@@ -28,7 +28,7 @@ namespace RUT::MIIT {
 
         LinkedList(const LinkedList& other) {
             Node* current = other.head;
-            while (current) {
+            while (current != nullptr) {
                 push_back(current->data);
                 current = current->next;
             }
@@ -59,10 +59,10 @@ namespace RUT::MIIT {
         }
 
         std::string ToString(Node* head) const {
-            std::ostringstream oss; 
+            std::ostringstream oss{};
             Node* current = head;
 
-            while (current) {
+            while (current != nullptr) {
                 oss << current->data << " -> "; 
                 current = current->next; 
             }
@@ -78,7 +78,7 @@ namespace RUT::MIIT {
             }
             else {
                 Node* current = head;
-                while (current->next) {
+                while (current->next != nullptr) {
                     current = current->next;
                 }
                 current->next = newNode;
