@@ -20,7 +20,7 @@ namespace RUT::MIIT {
     public:
         LinkedList() {}
 
-        LinkedList(std::initializer_list<T> values) : head(nullptr) {
+        LinkedList(std::initializer_list<T> values) {
             for (const auto& value : values) {
                 push_back(value);
             }
@@ -43,9 +43,11 @@ namespace RUT::MIIT {
         }
 
         LinkedList& operator=(const LinkedList& other) {
-            swap(*this, other);
+            list<T> copy{ other }; 
+            swap(copy);
             return *this;
         }
+
 
 
         bool isEmpty() const {
