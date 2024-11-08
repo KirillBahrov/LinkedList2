@@ -43,18 +43,22 @@ namespace RUT::MIIT {
         }
 
         LinkedList& operator=(const LinkedList& other) {
-            list<T> copy{ other }; 
-            swap(copy);
+            if (this != &other) {
+                LinkedList<T> copy(other);
+                swap(copy);
+            }
             return *this;
         }
 
-
+        void swap(LinkedList& other) noexcept {
+            std::swap(head, other.head);
+        }
 
         bool isEmpty() const {
             return head == nullptr;
         }
 
-        std::string ToString(Node* head) {
+        std::string ToString(Node* head) const {
             std::ostringstream oss; 
             Node* current = head;
 
@@ -148,7 +152,7 @@ namespace RUT::MIIT {
         }
 
         friend std::ostream& operator<<(std::ostream& os, const LinkedList& list) {
-            os << list.toString();
+            os << LinkedList.ToString();
             return os;
         }
     };
