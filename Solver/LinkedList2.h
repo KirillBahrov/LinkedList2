@@ -28,15 +28,7 @@ namespace RUT::MIIT {
         * @brief метод, использующийся для копирования всех эл-тов из LinkedList<T> в текущий объект списка
         * @param other(const LinkedList&): список, элементы которого нужно копировать в текущий объект списка
         */
-        void copy(const LinkedList& other)
-        {
-            Node* current = other.head;
-            while (current != nullptr) 
-            {
-                push_back(current->data);
-                current = current->next;
-            }
-        }
+        void copy(const LinkedList& other);
 
     public:
         /**
@@ -86,27 +78,27 @@ namespace RUT::MIIT {
         * @brief метод, возвращающий строковое представление списка
         * @param Node* head - головной узел связного списка
         */
-        std::string ToString(Node* head) const;
+        std::string ToString() const;
 
         /**
         * @brief метод, добавляющий элемент в конце списка
         */
-        void push_back(const T& value);
+        void pushBack(const T& value);
 
         /**
         * @brief метод, добавляющий новый элемент в начало списка
         */
-        void push_front(T value const);
+        void pushFront(T value const);
 
         /**
         * @brief метод, удаляющий последний элемент списка
         */
-        void pop_back();
+        void popBack();
 
         /**
         * @brief метод, удаляющий первый элемент списка
         */
-        void pop_front();
+        void popFront();
 
         /**
         * @brief метод, вставляющий эл-т в список на указанную позицию idx
@@ -127,13 +119,27 @@ namespace RUT::MIIT {
     };
 
     template<typename T>
-    inline LinkedList<T>::LinkedList() : {};
+    inline LinkedList<T>::LinkedList() : 
+    {
+        Node* Head = nullptr;
+    };
+
+    template<typename T>
+    inline void LinkedList<T>::copy(const LinkedList& other)
+    {
+        Node* current = other.head;
+        while (current != nullptr)
+        {
+            pushBack(current->data);
+            current = current->next;
+        }
+    }
 
     template<typename T>
     inline LinkedList<T>::LinkedList(std::initializer_list<T> values)
     {
         for (const auto& value : values) {
-            push_back(value);
+            pushBack(value);
         }
     };
 
@@ -142,7 +148,7 @@ namespace RUT::MIIT {
     {
         Node* current = other.head;
         while (current != nullptr) {
-            push_back(current->data);
+            pushBack(current->data);
             current = current->next;
         }
     };
@@ -182,7 +188,7 @@ namespace RUT::MIIT {
     };
 
     template<typename T>
-    inline std::string LinkedList<T>::ToString(Node* head) const
+    inline std::string LinkedList<T>::ToString() const
     {
         std::ostringstream oss{};
         Node* current = head;
@@ -196,7 +202,7 @@ namespace RUT::MIIT {
     };
 
     template<typename T>
-    inline void LinkedList<T>::push_back(const T& value)
+    inline void LinkedList<T>::pushBack(const T& value)
     {
         Node* newNode = new Node(value);
         if (isEmpty()) {
@@ -212,7 +218,7 @@ namespace RUT::MIIT {
     };
 
     template<typename T>
-    inline void LinkedList<T>::push_front(const T& value)
+    inline void LinkedList<T>::pushFront(const T& value)
     {
         Node* newNode = new Node(value);
         newNode->next = head;
@@ -221,7 +227,7 @@ namespace RUT::MIIT {
 };
 
     template<typename T>
-    inline void LinkedList<T>::pop_back()
+    inline void LinkedList<T>::popBack()
     {
         if (isEmpty()) throw std::out_of_range("List is empty");
         if (head->next == nullptr) {
@@ -239,7 +245,7 @@ namespace RUT::MIIT {
     };
 
     template<typename T>
-    inline void LinkedList<T>::pop_front()
+    inline void LinkedList<T>::popFront()
     {
         if (isEmpty()) throw std::out_of_range("List is empty");
         Node* temp = head;
@@ -251,7 +257,7 @@ namespace RUT::MIIT {
     inline void LinkedList<T>::insert(size_t idx, T elem)
     {
         if (idx == 0) {
-            push_front(elem);
+            pushFront(elem);
             return;
         }
         Node* current = head;
@@ -269,7 +275,7 @@ namespace RUT::MIIT {
     {
         if (isEmpty()) throw std::out_of_range("Invalid index");
         if (idx == 0) {
-            pop_front();
+            popFront();
             return;
         }
         Node* current = head;
@@ -286,7 +292,7 @@ namespace RUT::MIIT {
     inline void LinkedList<T>::clear()
     {
         while (!isEmpty()) {
-            pop_front();
+            popFront();
         }
     };
 
