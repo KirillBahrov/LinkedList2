@@ -254,7 +254,7 @@ namespace RUT::MIIT {
     };
 
     template<typename T>
-    inline void LinkedList<T>::insert(size_t idx, T elem)
+    inline void LinkedList<T>::insert(size_t idx, const T& elem)
     {
         if (idx == 0) {
             pushFront(elem);
