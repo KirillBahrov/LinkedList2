@@ -1,34 +1,24 @@
 ﻿#include <iostream>
-#include <string>
-#include <initializer_list>
-#include <stdexcept>
-#include <sstream>
+#include <string> 
 
-namespace RUT::MIIT {
+namespace RUT::MIIT
+{
+    template <typename T> class LinkedList;
 
     template<typename T>
-    /**
-    * @brief класс линейный односвязный список
-    */
-    class LinkedList {
+    std::ostream& operator<<(std::ostream& os, const RUT::MIIT::LinkedList<T>& list);
+
+    template <typename T>
+    class LinkedList
+    {
     private:
-        /**
-        * @brief структура, представляющая один элемент списка
-        */
-        struct Node {
+
+        struct Node
+        {
             T data;
             Node* next = nullptr;
-
-            Node(T value) : data(value), next(nullptr) {}
         };
-
         Node* head;
-
-        /**
-        * @brief метод, использующийся для копирования всех эл-тов из LinkedList<T> в текущий объект списка
-        * @param other(const LinkedList&): список, элементы которого нужно копировать в текущий объект списка
-        */
-        void copy(const LinkedList& other);
 
     public:
         /**
@@ -36,11 +26,8 @@ namespace RUT::MIIT {
         */
         LinkedList();
 
-        /**
-        * @brief конструктор с инициализированным списком
-        * @param initializer_list<T> инициализированный список
-        */
-        LinkedList(std::initializer_list<T> values);
+
+        explicit LinkedList(std::initializer_list<T> values);
 
         /**
         * @brief конструктор копирования
@@ -48,24 +35,20 @@ namespace RUT::MIIT {
         LinkedList(const LinkedList& other);
 
         /**
-        * @brief конструктор перемещения
-        */
-        LinkedList(LinkedList&& other) noexcept;
-
-        /**
         * @brief деструктор
         */
         ~LinkedList();
 
         /**
+        * @brief конструктор перемещения
+        */
+
+        LinkedList(LinkedList&& other) noexcept;
+
+        /**
         * @brief оператор присваивания/копирования
         */
         LinkedList& operator=(const LinkedList& other);
-
-        /**
-        * @brief метод обмена
-        */
-        void swap(LinkedList& other) noexcept;
 
         /**
         * @brief метод, проверяющий пуст ли список
@@ -76,229 +59,224 @@ namespace RUT::MIIT {
 
         /**
         * @brief метод, возвращающий строковое представление списка
-        * @param Node* head - головной узел связного списка
         */
-        std::string ToString() const;
+        std::string toString() const;
 
         /**
         * @brief метод, добавляющий элемент в конце списка
         */
-        void pushBack(const T& value);
+        void push_back(T value);
 
         /**
         * @brief метод, добавляющий новый элемент в начало списка
         */
-        void pushFront(T value const);
+        void push_front(T value);
 
         /**
         * @brief метод, удаляющий последний элемент списка
         */
-        void popBack();
+        void pop_back();
 
         /**
-        * @brief метод, удаляющий первый элемент списка
-        */
-        void popFront();
+       * @brief метод, удаляющий первый элемент списка
+       */
+        void pop_front();
 
         /**
         * @brief метод, вставляющий эл-т в список на указанную позицию idx
         */
-        void insert(size_t idx, T elem);
+        void insert(int idx, T elem);
 
         /**
         * @brief метод, удаляющий эл-т по указанному индексу idx
         */
-        void remove(size_t idx);
+        void remove(int idx);
 
-        /**
-        * @brief метод, очищающий список, удаляя все эл-ты
-        */
-        void clear();
 
-        friend std::ostream& operator<<(std::ostream& os, const LinkedList& list);
     };
+    template<typename T>
+    LinkedList<T>::LinkedList() : head(nullptr) {}
 
     template<typename T>
-    inline LinkedList<T>::LinkedList() : 
+    LinkedList<T>::LinkedList(std::initializer_list<T> values) : LinkedList()
     {
-        Node* Head = nullptr;
-    };
-
-    template<typename T>
-    inline void LinkedList<T>::copy(const LinkedList& other)
-    {
-        Node* current = other.head;
-        while (current != nullptr)
+        for (auto& value : values)
         {
-            pushBack(current->data);
-            current = current->next;
+            push_back(value);
         }
     }
 
     template<typename T>
-    inline LinkedList<T>::LinkedList(std::initializer_list<T> values)
+    LinkedList<T>::LinkedList(const LinkedList& other) : LinkedList()
     {
-        for (const auto& value : values) {
-            pushBack(value);
+        Node* temp = other.head;
+        while (temp != nullptr)
+        {
+            push_back(temp->data);
+            temp = temp->next;
         }
-    };
+    }
 
     template<typename T>
-    inline LinkedList<T>::LinkedList(const LinkedList& other)
+    LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other)
     {
-        Node* current = other.head;
-        while (current != nullptr) {
-            pushBack(current->data);
-            current = current->next;
-        }
-    };
-
-    template<typename T>
-    inline LinkedList<T>::LinkedList(LinkedList&& other) noexcept
-    {
-        other.head = nullptr;
-    };
-
-    template<typename T>
-    inline LinkedList<T>::~LinkedList()
-    {
-        clear();
-    };
-
-    template<typename T>
-    inline LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other)
-    {
-        if (this != &other) {
-            LinkedList<T> copy(other);
-            swap(copy);
-        }
+        LinkedList temp(other);
+        std::swap(this->head, temp.head);
         return *this;
-    };
+    }
 
     template<typename T>
-    inline void LinkedList<T>::swap(LinkedList& other) noexcept
+    LinkedList<T>::~LinkedList()
     {
-        std::swap(head, other.head);
-    };
+        while (head != nullptr)
+        {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
 
     template<typename T>
-    inline bool LinkedList<T>::isEmpty() const
+    bool LinkedList<T>::isEmpty() const
     {
         return head == nullptr;
-    };
+    }
 
     template<typename T>
-    inline std::string LinkedList<T>::ToString() const
+    std::string LinkedList<T>::toString() const
     {
-        std::ostringstream oss{};
-        Node* current = head;
-
-        while (current != nullptr) {
-            oss << current->data << " -> ";
-            current = current->next;
+        std::stringstream result;
+        Node* temp = head;
+        while (temp != nullptr)
+        {
+            result << temp->data;
+            temp = temp->next;
         }
-
-        return oss.str();
-    };
+        return result.str();
+    }
 
     template<typename T>
-    inline void LinkedList<T>::pushBack(const T& value)
+    void LinkedList<T>::push_back(T value)
     {
-        Node* newNode = new Node(value);
-        if (isEmpty()) {
+        Node* newNode = new Node{ value, nullptr };
+        if (head == nullptr)
+        {
             head = newNode;
         }
-        else {
-            Node* current = head;
-            while (current->next != nullptr) {
-                current = current->next;
+        else
+        {
+            Node* temp = head;
+            while (temp->next != nullptr)
+            {
+                temp = temp->next;
             }
-            current->next = newNode;
+            temp->next = newNode;
         }
-    };
+    }
 
     template<typename T>
-    inline void LinkedList<T>::pushFront(const T& value)
+    void LinkedList<T>::push_front(T value)
     {
-        Node* newNode = new Node(value);
-        newNode->next = head;
+
+        Node* newNode = new Node{ value, head };
         head = newNode;
     }
-};
 
     template<typename T>
-    inline void LinkedList<T>::popBack()
+    void LinkedList<T>::pop_back()
     {
-        if (isEmpty()) throw std::out_of_range("List is empty");
-        if (head->next == nullptr) {
+        if (head == nullptr)
+        {
+            return;
+        }
+        if (head->next == nullptr)
+        {
             delete head;
             head = nullptr;
+            return;
         }
-        else {
-            Node* current = head;
-            while (current->next->next) {
-                current = current->next;
-            }
-            delete current->next;
-            current->next = nullptr;
+        Node* temp = head;
+        while (temp->next->next != nullptr)
+        {
+            temp = temp->next;
         }
-    };
+        delete temp->next;
+        temp->next = nullptr;
+    }
 
     template<typename T>
-    inline void LinkedList<T>::popFront()
+    void LinkedList<T>::pop_front()
     {
-        if (isEmpty()) throw std::out_of_range("List is empty");
+        if (head == nullptr)
+        {
+            return;
+        }
         Node* temp = head;
         head = head->next;
         delete temp;
-    };
+    }
 
     template<typename T>
-    inline void LinkedList<T>::insert(size_t idx, const T& elem)
+    std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
     {
-        if (idx == 0) {
-            pushFront(elem);
-            return;
-        }
-        Node* current = head;
-        if (current == nullptr) throw std::out_of_range("Index exceeds list size");
-        for (size_t i = 0; current != nullptr && i < idx - 1; ++i) {
-            current = current->next;
-        }
-        Node* newNode = new Node(elem);
-        newNode->next = current->next;
-        current->next = newNode;
-    };
-
-    template<typename T>
-    inline void LinkedList<T>::remove(size_t idx)
-    {
-        if (isEmpty()) throw std::out_of_range("Invalid index");
-        if (idx == 0) {
-            popFront();
-            return;
-        }
-        Node* current = head;
-        for (size_t i = 0; current != nullptr && i < idx - 1; ++i) {
-            current = current->next;
-        }
-        if (current == nullptr) throw std::out_of_range("Index exceeds list size");
-        Node* temp = current->next;
-        current->next = temp->next;
-        delete temp;
-    };
-
-    template<typename T>
-    inline void LinkedList<T>::clear()
-    {
-        while (!isEmpty()) {
-            popFront();
-        }
-    };
-
-    template<typename T>
-    inline std::ostream& LinkedList<T>::operator<<(std::ostream& os, const LinkedList& list)
-    {
-        os << LinkedList.ToString();
+        os << list.toString();
         return os;
-    };
+    }
+
+    template<typename T>
+    void LinkedList<T>::insert(int idx, T elem)
+    {
+        if (idx < 0) throw std::out_of_range("Некорректный индекс");
+        if (idx == 0)
+        {
+            push_front(elem);
+            return;
+        }
+        size_t index = idx;
+        Node* current = head;
+        size_t curr_index = 0;
+        while (curr_index < index - 1)
+        {
+            if (current == nullptr) throw std::out_of_range("Некорректный индекс");
+            current = current->next;
+            curr_index++;
+        }
+        Node* tmp = current->next;
+        current->next = new Node();
+        current = current->next;
+        current->data = elem;
+        current->next = tmp;
+    }
+
+    template<typename T>
+    void LinkedList<T>::remove(int idx)
+    {
+        if (idx < 0) throw std::out_of_range("Некорректный индекс");
+        if (head == nullptr) throw std::out_of_range("Список пуст");
+        if (idx == 0)
+        {
+            pop_front();
+            return;
+        }
+        size_t index = idx;
+        Node* current = head;
+        size_t curr_index = 0;
+        while (curr_index < index - 1)
+        {
+            if (current == nullptr) throw std::out_of_range("Некорректный индекс");
+            current = current->next;
+            curr_index++;
+        }
+        Node* tmp = current->next->next;
+        if (tmp == nullptr) throw std::out_of_range("Некорректный индекс");
+        delete current->next;
+        current->next = tmp;
+    }
+
+    template<typename T>
+    LinkedList<T>::LinkedList(LinkedList&& other) noexcept
+    {
+        head = other.head;
+        other.head = nullptr;
+    }
+}
