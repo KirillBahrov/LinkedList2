@@ -1,10 +1,17 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string> 
 
 namespace RUT::MIIT
 {
     template <typename T> class LinkedList;
 
+    /*
+    *@brief Оператор <<  линейного односвязного списка
+    *@param T - тип данных, хранящийся в  классе LinkedList
+    *@param output - поток вывода
+    *@param LinkedList - линейный односвязный список
+    *@return Изменённый поток вывода
+    */
     template<typename T>
     std::ostream& operator<<(std::ostream& os, const RUT::MIIT::LinkedList<T>& list);
 
@@ -26,11 +33,15 @@ namespace RUT::MIIT
         */
         LinkedList();
 
-
+        /**
+        * @brief конструктор для initializer_list
+        * @param values - список из объектов типа Т
+        */
         explicit LinkedList(std::initializer_list<T> values);
 
         /**
         * @brief конструктор копирования
+        * @param other - другой объект типа LinkedList
         */
         LinkedList(const LinkedList& other);
 
@@ -40,13 +51,14 @@ namespace RUT::MIIT
         ~LinkedList();
 
         /**
-        * @brief конструктор перемещения
+        * @brief конструктор копирования перемещением
+        * @param other - другой объект типа LinkedList
         */
-
         LinkedList(LinkedList&& other) noexcept;
 
         /**
         * @brief оператор присваивания/копирования
+        * @param other - другой объект типа LinkedList
         */
         LinkedList& operator=(const LinkedList& other);
 
@@ -58,17 +70,20 @@ namespace RUT::MIIT
         bool isEmpty() const;
 
         /**
-        * @brief метод, возвращающий строковое представление списка
+        * @brief метод toString для  LinkedList
+        * @return возвращает LinkedList как строку
         */
         std::string toString() const;
 
         /**
         * @brief метод, добавляющий элемент в конце списка
+        * @param value - данные типа Т
         */
         void push_back(T value);
 
         /**
         * @brief метод, добавляющий новый элемент в начало списка
+        * @param value - данные типа Т
         */
         void push_front(T value);
 
@@ -84,11 +99,14 @@ namespace RUT::MIIT
 
         /**
         * @brief метод, вставляющий эл-т в список на указанную позицию idx
+        * @param idx - индекс вставляемого элемента
+        * @param elem - вставляемый элемент
         */
         void insert(int idx, T elem);
 
         /**
         * @brief метод, удаляющий эл-т по указанному индексу idx
+        * @param idx - индекс удаляемого элемента
         */
         void remove(int idx);
 
@@ -173,7 +191,7 @@ namespace RUT::MIIT
             temp->next = newNode;
         }
     }
-
+}
     template<typename T>
     void LinkedList<T>::push_front(T value)
     {
