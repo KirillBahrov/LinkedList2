@@ -5,13 +5,6 @@ namespace RUT::MIIT
 {
     template <typename T> class LinkedList;
 
-    /*
-    *@brief Оператор <<  линейного односвязного списка
-    *@param T - тип данных, хранящийся в  классе LinkedList
-    *@param output - поток вывода
-    *@param LinkedList - линейный односвязный список
-    *@return Изменённый поток вывода
-    */
     template<typename T>
     std::ostream& operator<<(std::ostream& os, const RUT::MIIT::LinkedList<T>& list);
 
@@ -33,15 +26,11 @@ namespace RUT::MIIT
         */
         LinkedList();
 
-        /**
-        * @brief конструктор для initializer_list
-        * @param values - список из объектов типа Т
-        */
+
         explicit LinkedList(std::initializer_list<T> values);
 
         /**
         * @brief конструктор копирования
-        * @param other - другой объект типа LinkedList
         */
         LinkedList(const LinkedList& other);
 
@@ -51,14 +40,13 @@ namespace RUT::MIIT
         ~LinkedList();
 
         /**
-        * @brief конструктор копирования перемещением
-        * @param other - другой объект типа LinkedList
+        * @brief конструктор перемещения
         */
+
         LinkedList(LinkedList&& other) noexcept;
 
         /**
         * @brief оператор присваивания/копирования
-        * @param other - другой объект типа LinkedList
         */
         LinkedList& operator=(const LinkedList& other);
 
@@ -70,43 +58,37 @@ namespace RUT::MIIT
         bool isEmpty() const;
 
         /**
-        * @brief метод toString для  LinkedList
-        * @return возвращает LinkedList как строку
+        * @brief метод, возвращающий строковое представление списка
         */
         std::string toString() const;
 
         /**
         * @brief метод, добавляющий элемент в конце списка
-        * @param value - данные типа Т
         */
-        void push_back(T value);
+        void pushBack(T value);
 
         /**
         * @brief метод, добавляющий новый элемент в начало списка
-        * @param value - данные типа Т
         */
-        void push_front(T value);
+        void pushFront(T value);
 
         /**
         * @brief метод, удаляющий последний элемент списка
         */
-        void pop_back();
+        void popBack();
 
         /**
        * @brief метод, удаляющий первый элемент списка
        */
-        void pop_front();
+        void popFront();
 
         /**
         * @brief метод, вставляющий эл-т в список на указанную позицию idx
-        * @param idx - индекс вставляемого элемента
-        * @param elem - вставляемый элемент
         */
         void insert(int idx, T elem);
 
         /**
         * @brief метод, удаляющий эл-т по указанному индексу idx
-        * @param idx - индекс удаляемого элемента
         */
         void remove(int idx);
 
@@ -120,7 +102,7 @@ namespace RUT::MIIT
     {
         for (auto& value : values)
         {
-            push_back(value);
+            pushBack(value);
         }
     }
 
@@ -130,7 +112,7 @@ namespace RUT::MIIT
         Node* temp = other.head;
         while (temp != nullptr)
         {
-            push_back(temp->data);
+            pushBack(temp->data);
             temp = temp->next;
         }
     }
@@ -174,7 +156,7 @@ namespace RUT::MIIT
     }
 
     template<typename T>
-    void LinkedList<T>::push_back(T value)
+    void LinkedList<T>::pushBack(T value)
     {
         Node* newNode = new Node{ value, nullptr };
         if (head == nullptr)
@@ -191,9 +173,9 @@ namespace RUT::MIIT
             temp->next = newNode;
         }
     }
-}
+
     template<typename T>
-    void LinkedList<T>::push_front(T value)
+    void LinkedList<T>::pushFront(T value)
     {
 
         Node* newNode = new Node{ value, head };
@@ -201,7 +183,7 @@ namespace RUT::MIIT
     }
 
     template<typename T>
-    void LinkedList<T>::pop_back()
+    void LinkedList<T>::popBack()
     {
         if (head == nullptr)
         {
@@ -223,7 +205,7 @@ namespace RUT::MIIT
     }
 
     template<typename T>
-    void LinkedList<T>::pop_front()
+    void LinkedList<T>::popFront()
     {
         if (head == nullptr)
         {
@@ -247,7 +229,7 @@ namespace RUT::MIIT
         if (idx < 0) throw std::out_of_range("Некорректный индекс");
         if (idx == 0)
         {
-            push_front(elem);
+            pushFront(elem);
             return;
         }
         size_t index = idx;
@@ -273,7 +255,7 @@ namespace RUT::MIIT
         if (head == nullptr) throw std::out_of_range("Список пуст");
         if (idx == 0)
         {
-            pop_front();
+            popFront();
             return;
         }
         size_t index = idx;
