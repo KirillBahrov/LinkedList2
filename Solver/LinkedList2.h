@@ -5,6 +5,13 @@ namespace RUT::MIIT
 {
     template <typename T> class LinkedList;
 
+    /*
+    *@brief Оператор <<  линейного односвязного списка
+    *@param T - тип данных, хранящийся в  классе LinkedList
+    *@param output - поток вывода
+    *@param LinkedList - линейный односвязный список
+    *@return Изменённый поток вывода
+    */
     template<typename T>
     std::ostream& operator<<(std::ostream& os, const RUT::MIIT::LinkedList<T>& list);
 
@@ -26,11 +33,15 @@ namespace RUT::MIIT
         */
         LinkedList();
 
-
+        /**
+        * @brief конструктор для initializer_list
+        * @param values - список из объектов типа Т
+        */
         explicit LinkedList(std::initializer_list<T> values);
 
         /**
         * @brief конструктор копирования
+        * @param other - другой объект типа LinkedList
         */
         LinkedList(const LinkedList& other);
 
@@ -40,13 +51,14 @@ namespace RUT::MIIT
         ~LinkedList();
 
         /**
-        * @brief конструктор перемещения
+        * @brief конструктор копирования перемещением
+        * @param other - другой объект типа LinkedList
         */
-
         LinkedList(LinkedList&& other) noexcept;
 
         /**
         * @brief оператор присваивания/копирования
+        * @param other - другой объект типа LinkedList
         */
         LinkedList& operator=(const LinkedList& other);
 
@@ -58,17 +70,20 @@ namespace RUT::MIIT
         bool isEmpty() const;
 
         /**
-        * @brief метод, возвращающий строковое представление списка
+        * @brief метод toString для  LinkedList
+        * @return возвращает LinkedList как строку
         */
         std::string toString() const;
 
         /**
         * @brief метод, добавляющий элемент в конце списка
+        * @param value - данные типа Т
         */
         void push_back(T value);
 
         /**
         * @brief метод, добавляющий новый элемент в начало списка
+        * @param value - данные типа Т
         */
         void push_front(T value);
 
@@ -84,11 +99,14 @@ namespace RUT::MIIT
 
         /**
         * @brief метод, вставляющий эл-т в список на указанную позицию idx
+        * @param idx - индекс вставляемого элемента
+        * @param elem - вставляемый элемент
         */
         void insert(int idx, T elem);
 
         /**
         * @brief метод, удаляющий эл-т по указанному индексу idx
+        * @param idx - индекс удаляемого элемента
         */
         void remove(int idx);
 
@@ -173,110 +191,110 @@ namespace RUT::MIIT
             temp->next = newNode;
         }
     }
+}
+template<typename T>
+void LinkedList<T>::push_front(T value)
+{
 
-    template<typename T>
-    void LinkedList<T>::push_front(T value)
+    Node* newNode = new Node{ value, head };
+    head = newNode;
+}
+
+template<typename T>
+void LinkedList<T>::pop_back()
+{
+    if (head == nullptr)
     {
-
-        Node* newNode = new Node{ value, head };
-        head = newNode;
+        return;
     }
-
-    template<typename T>
-    void LinkedList<T>::pop_back()
+    if (head->next == nullptr)
     {
-        if (head == nullptr)
-        {
-            return;
-        }
-        if (head->next == nullptr)
-        {
-            delete head;
-            head = nullptr;
-            return;
-        }
-        Node* temp = head;
-        while (temp->next->next != nullptr)
-        {
-            temp = temp->next;
-        }
-        delete temp->next;
-        temp->next = nullptr;
+        delete head;
+        head = nullptr;
+        return;
     }
-
-    template<typename T>
-    void LinkedList<T>::pop_front()
+    Node* temp = head;
+    while (temp->next->next != nullptr)
     {
-        if (head == nullptr)
-        {
-            return;
-        }
-        Node* temp = head;
-        head = head->next;
-        delete temp;
+        temp = temp->next;
     }
+    delete temp->next;
+    temp->next = nullptr;
+}
 
-    template<typename T>
-    std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
+template<typename T>
+void LinkedList<T>::pop_front()
+{
+    if (head == nullptr)
     {
-        os << list.toString();
-        return os;
+        return;
     }
+    Node* temp = head;
+    head = head->next;
+    delete temp;
+}
 
-    template<typename T>
-    void LinkedList<T>::insert(int idx, T elem)
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
+{
+    os << list.toString();
+    return os;
+}
+
+template<typename T>
+void LinkedList<T>::insert(int idx, T elem)
+{
+    if (idx < 0) throw std::out_of_range("Некорректный индекс");
+    if (idx == 0)
     {
-        if (idx < 0) throw std::out_of_range("Некорректный индекс");
-        if (idx == 0)
-        {
-            push_front(elem);
-            return;
-        }
-        size_t index = idx;
-        Node* current = head;
-        size_t curr_index = 0;
-        while (curr_index < index - 1)
-        {
-            if (current == nullptr) throw std::out_of_range("Некорректный индекс");
-            current = current->next;
-            curr_index++;
-        }
-        Node* tmp = current->next;
-        current->next = new Node();
+        push_front(elem);
+        return;
+    }
+    size_t index = idx;
+    Node* current = head;
+    size_t curr_index = 0;
+    while (curr_index < index - 1)
+    {
+        if (current == nullptr) throw std::out_of_range("Некорректный индекс");
         current = current->next;
-        current->data = elem;
-        current->next = tmp;
+        curr_index++;
     }
+    Node* tmp = current->next;
+    current->next = new Node();
+    current = current->next;
+    current->data = elem;
+    current->next = tmp;
+}
 
-    template<typename T>
-    void LinkedList<T>::remove(int idx)
+template<typename T>
+void LinkedList<T>::remove(int idx)
+{
+    if (idx < 0) throw std::out_of_range("Некорректный индекс");
+    if (head == nullptr) throw std::out_of_range("Список пуст");
+    if (idx == 0)
     {
-        if (idx < 0) throw std::out_of_range("Некорректный индекс");
-        if (head == nullptr) throw std::out_of_range("Список пуст");
-        if (idx == 0)
-        {
-            pop_front();
-            return;
-        }
-        size_t index = idx;
-        Node* current = head;
-        size_t curr_index = 0;
-        while (curr_index < index - 1)
-        {
-            if (current == nullptr) throw std::out_of_range("Некорректный индекс");
-            current = current->next;
-            curr_index++;
-        }
-        Node* tmp = current->next->next;
-        if (tmp == nullptr) throw std::out_of_range("Некорректный индекс");
-        delete current->next;
-        current->next = tmp;
+        pop_front();
+        return;
     }
+    size_t index = idx;
+    Node* current = head;
+    size_t curr_index = 0;
+    while (curr_index < index - 1)
+    {
+        if (current == nullptr) throw std::out_of_range("Некорректный индекс");
+        current = current->next;
+        curr_index++;
+    }
+    Node* tmp = current->next->next;
+    if (tmp == nullptr) throw std::out_of_range("Некорректный индекс");
+    delete current->next;
+    current->next = tmp;
+}
 
-    template<typename T>
-    LinkedList<T>::LinkedList(LinkedList&& other) noexcept
-    {
-        head = other.head;
-        other.head = nullptr;
-    }
+template<typename T>
+LinkedList<T>::LinkedList(LinkedList&& other) noexcept
+{
+    head = other.head;
+    other.head = nullptr;
+}
 }
