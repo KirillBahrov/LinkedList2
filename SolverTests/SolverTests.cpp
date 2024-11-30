@@ -6,9 +6,9 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace RUT::MIIT;
 
-namespace UnitTest1
+namespace LinkedTest
 {
-    TEST_CLASS(UnitTest1)
+    TEST_CLASS(LinkedTest)
     {
     public:
         TEST_METHOD(DefaultConstructor_Success)
@@ -20,8 +20,7 @@ namespace UnitTest1
         TEST_METHOD(InitializerListConstructor_Success)
         {
             LinkedList<int> list{ 1, 2, 3 };
-            Assert::IsFalse(list.isEmpty());
-            Assert::AreEqual(std::string("123"), list.toString());
+            Assert::AreEqual(std::string("123"), list.ToString());
         }
 
         TEST_METHOD(PushBack_ValidData_Success)
@@ -29,7 +28,7 @@ namespace UnitTest1
             LinkedList<int> list;
             list.pushBack(1);
             list.pushBack(2);
-            Assert::AreEqual(std::string("12"), list.toString());
+            Assert::AreEqual(std::string("12"), list.ToString());
         }
 
         TEST_METHOD(PushFront_ValidData_Success)
@@ -37,36 +36,35 @@ namespace UnitTest1
             LinkedList<int> list;
             list.pushFront(2);
             list.pushFront(1);
-            Assert::AreEqual(std::string("21"), list.toString());
+            Assert::AreEqual(std::string("21"), list.ToString());
         }
 
         TEST_METHOD(PopBack_ValidData_Success)
         {
             LinkedList<int> list{ 1, 2, 3 };
             list.popBack();
-            Assert::AreEqual(std::string("12"), list.toString());
+            Assert::AreEqual(std::string("12"), list.ToString());
         }
 
         TEST_METHOD(PopFront_ValidData_Success)
         {
             LinkedList<int> list{ 1, 2, 3 };
             list.popFront();
-            Assert::AreEqual(std::string("23"), list.toString());
+            Assert::AreEqual(std::string("23"), list.ToString());
         }
 
         TEST_METHOD(CopyCtor_Success)
         {
             LinkedList<int> list1{ 1, 2, 3 };
             LinkedList<int> list2(list1);
-            Assert::AreEqual(std::string("123"), list2.toString());
+            Assert::AreEqual(std::string("123"), list2.ToString());
         }
 
         TEST_METHOD(MoveCtor_Success)
         {
             LinkedList<int> list1{ 1, 2, 3 };
             LinkedList<int> list2(std::move(list1));
-            Assert::AreEqual(std::string("123"), list2.toString());
-            Assert::IsTrue(list1.isEmpty());
+            Assert::IsTrue(list1.isEmpty() && std::string("123") == list2.ToString());
         }
 
         TEST_METHOD(AssignmentOperator_ValidData_Success)
@@ -74,7 +72,7 @@ namespace UnitTest1
             LinkedList<int> list1{ 1, 2, 3 };
             LinkedList<int> list2;
             list2 = list1;
-            Assert::AreEqual(std::string("123"), list2.toString());
+            Assert::AreEqual(std::string("123"), list2.ToString());
         }
 
         TEST_METHOD(PopFrontEmpty_ValidData_Success)
@@ -93,14 +91,14 @@ namespace UnitTest1
         {
             LinkedList<int> list{ 1, 3 };
             list.insert(1, 2);
-            Assert::AreEqual(std::string("123"), list.toString());
+            Assert::AreEqual(std::string("123"), list.ToString());
         }
 
         TEST_METHOD(InsertAtBeginning_ValidData_Success)
         {
             LinkedList<int> list{ 2, 3 };
             list.insert(0, 1);
-            Assert::AreEqual(std::string("123"), list.toString());
+            Assert::AreEqual(std::string("123"), list.ToString());
         }
 
         TEST_METHOD(InsertOutOfBounds_ValidData_Success)
@@ -113,14 +111,14 @@ namespace UnitTest1
         {
             LinkedList<int> list{ 1, 2, 3 };
             list.remove(1);
-            Assert::AreEqual(std::string("13"), list.toString());
+            Assert::AreEqual(std::string("13"), list.ToString());
         }
 
         TEST_METHOD(RemoveAtBeginning_ValidData_Success)
         {
             LinkedList<int> list{ 1, 2, 3 };
             list.remove(0);
-            Assert::AreEqual(std::string("23"), list.toString());
+            Assert::AreEqual(std::string("23"), list.ToString());
         }
 
         TEST_METHOD(RemoveOutOfBounds_ValidData_Success)
@@ -137,7 +135,7 @@ namespace UnitTest1
             list.pushBack(2);
             list.pushFront(0);
             list.popBack();
-            Assert::AreEqual(std::string("01"), list.toString());
+            Assert::AreEqual(std::string("01"), list.ToString());
         }
 
         TEST_METHOD(DefaultCtorString_Success)
@@ -149,8 +147,7 @@ namespace UnitTest1
         TEST_METHOD(InitializerListCtorString_ValidData_Success)
         {
             LinkedList<std::string> list{ "Hello", "World" };
-            Assert::IsFalse(list.isEmpty());
-            Assert::AreEqual(std::string("HelloWorld"), list.toString());
+            Assert::AreEqual(std::string("HelloWorld"), list.ToString());
         }
 
         TEST_METHOD(AddToBackString)
@@ -158,7 +155,7 @@ namespace UnitTest1
             LinkedList<std::string> list;
             list.pushBack("Hello");
             list.pushBack("World");
-            Assert::AreEqual(std::string("HelloWorld"), list.toString());
+            Assert::AreEqual(std::string("HelloWorld"), list.ToString());
         }
 
         TEST_METHOD(AddToFrontString)
@@ -166,36 +163,35 @@ namespace UnitTest1
             LinkedList<std::string> list;
             list.pushFront("World");
             list.pushFront("Hello");
-            Assert::AreEqual(std::string("HelloWorld"), list.toString());
+            Assert::AreEqual(std::string("HelloWorld"), list.ToString());
         }
 
         TEST_METHOD(RemoveLastString)
         {
             LinkedList<std::string> list{ "Hello", "World" };
             list.popBack();
-            Assert::AreEqual(std::string("Hello"), list.toString());
+            Assert::AreEqual(std::string("Hello"), list.ToString());
         }
 
         TEST_METHOD(RemoveFirstString)
         {
             LinkedList<std::string> list{ "Hello", "World" };
             list.popFront();
-            Assert::AreEqual(std::string("World"), list.toString());
+            Assert::AreEqual(std::string("World"), list.ToString());
         }
 
         TEST_METHOD(CopyConstructorString)
         {
             LinkedList<std::string> list1{ "Hello", "World" };
             LinkedList<std::string> list2(list1);
-            Assert::AreEqual(std::string("HelloWorld"), list2.toString());
+            Assert::AreEqual(std::string("HelloWorld"), list2.ToString());
         }
 
         TEST_METHOD(MoveConstructorString)
         {
             LinkedList<std::string> list1{ "Hello", "World" };
             LinkedList<std::string> list2(std::move(list1));
-            Assert::AreEqual(std::string("HelloWorld"), list2.toString());
-            Assert::IsTrue(list1.isEmpty());
+            Assert::IsTrue(list1.isEmpty() && std::string("HelloWorld") == list2.ToString());
         }
 
         TEST_METHOD(AssignmentOperatorString)
@@ -203,33 +199,33 @@ namespace UnitTest1
             LinkedList<std::string> list1{ "Hello", "World" };
             LinkedList<std::string> list2;
             list2 = list1;
-            Assert::AreEqual(std::string("HelloWorld"), list2.toString());
+            Assert::AreEqual(std::string("HelloWorld"), list2.ToString());
         }
 
         TEST_METHOD(PopFirstFromEmptyString)
         {
             LinkedList<std::string> list;
-            Assert::ExpectException<std::out_of_range>([&list]() { list.pop_front(); });
+            Assert::ExpectException<std::out_of_range>([&list]() { list.popFront(); });
         }
 
         TEST_METHOD(PopLastFromEmptyString)
         {
             LinkedList<std::string> list;
-            Assert::ExpectException<std::out_of_range>([&list]() { list.pop_back(); });
+            Assert::ExpectException<std::out_of_range>([&list]() { list.popBack(); });
         }
 
         TEST_METHOD(TestInsertString)
         {
             LinkedList<std::string> list{ "Hello", "World" };
             list.insert(1, "Beautiful");
-            Assert::AreEqual(std::string("HelloBeautifulWorld"), list.toString());
+            Assert::AreEqual(std::string("HelloBeautifulWorld"), list.ToString());
         }
 
         TEST_METHOD(InsertAtStartString)
         {
             LinkedList<std::string> list{ "World" };
             list.insert(0, "Hello");
-            Assert::AreEqual(std::string("HelloWorld"), list.toString());
+            Assert::AreEqual(std::string("HelloWorld"), list.ToString());
         }
 
         TEST_METHOD(InsertOutOfBoundsString)
@@ -242,11 +238,7 @@ namespace UnitTest1
         {
             LinkedList<std::string> list{ "Hello", "Beautiful", "World" };
             list.remove(1);
-            Assert::AreEqual(std::string("HelloWorld"), list.toString());
+            Assert::AreEqual(std::string("HelloWorld"), list.ToString());
         }
-
-        TEST_METHOD(RemoveFirstElementString)
-        {
-        };
-    }
+    };
 }

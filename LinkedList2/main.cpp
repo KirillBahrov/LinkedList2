@@ -3,6 +3,6 @@
 
 int main()
 {
-    RUT::MIIT::LinkedList list = { 1, 2, 3, 4 };
-    std::cout << "Linked list: " << list << std::endl;
+    RUT::MIIT::LinkedList list{ 1, 2, 3, 4 };
+    std::cout << "Linked list: " << list << std::endl << list.peekFront() << list.peekBack();
 }

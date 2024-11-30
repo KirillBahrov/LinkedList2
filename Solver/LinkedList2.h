@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string> 
-
+#include <sstream>
 namespace RUT::MIIT
 {
     template <typename T> class LinkedList;
@@ -19,11 +19,14 @@ namespace RUT::MIIT
     class LinkedList
     {
     private:
-
+        /**
+        * @brief Node - структура узла
+        */
         struct Node
         {
             T data;
-            Node* next = nullptr;
+            Node* next;
+            Node(const T& data, Node* next) : data{ data }, next{ next } {}
         };
         Node* head;
 
@@ -37,7 +40,7 @@ namespace RUT::MIIT
         * @brief конструктор для initializer_list
         * @param values - список из объектов типа Т
         */
-        explicit LinkedList(std::initializer_list<T> values);
+        LinkedList(std::initializer_list<T> values);
 
         /**
         * @brief конструктор копирования
@@ -70,22 +73,22 @@ namespace RUT::MIIT
         bool isEmpty() const;
 
         /**
-        * @brief метод toString для  LinkedList
+        * @brief метод ToString для  LinkedList
         * @return возвращает LinkedList как строку
         */
-        std::string toString() const;
+        std::string ToString() const;
 
         /**
         * @brief метод, добавляющий элемент в конце списка
         * @param value - данные типа Т
         */
-        void pushBack(T value);
+        void pushBack(const T& value);
 
         /**
         * @brief метод, добавляющий новый элемент в начало списка
         * @param value - данные типа Т
         */
-        void pushFront(T value);
+        void pushFront(const T& value);
 
         /**
         * @brief метод, удаляющий последний элемент списка
@@ -110,6 +113,17 @@ namespace RUT::MIIT
         */
         void remove(int idx);
 
+        /**
+        * @brief метод вывода переднего элемента LinkedList
+        * @return - первый элемент списка
+        */
+        T peekFront() const;
+
+        /**
+        * @brief метод вывода последнего элемента LinkedList
+        * @return - последний элемент списка
+        */
+        T peekBack() const;
 
     };
     template<typename T>
@@ -161,7 +175,7 @@ namespace RUT::MIIT
     }
 
     template<typename T>
-    std::string LinkedList<T>::toString() const
+    std::string LinkedList<T>::ToString() const
     {
         std::stringstream result;
         Node* temp = head;
@@ -174,7 +188,7 @@ namespace RUT::MIIT
     }
 
     template<typename T>
-    void LinkedList<T>::pushBack(T value)
+    void LinkedList<T>::pushBack(const T& value)
     {
         Node* newNode = new Node{ value, nullptr };
         if (head == nullptr)
@@ -193,15 +207,15 @@ namespace RUT::MIIT
     }
 
     template<typename T>
-    void LinkedList<T>::pushFront(T value)
+    void LinkedList<T>::pushFront(const T& value)
     {
 
-    Node* newNode = new Node{ value, head };
-    head = newNode;
-}
+        Node* newNode = new Node{ value, head };
+        head = newNode;
+    }
 
     template<typename T>
-    void LinkedList<T>::pop_back()
+    void LinkedList<T>::popBack()
     {
         if (head == nullptr)
         {
@@ -223,7 +237,7 @@ namespace RUT::MIIT
     }
 
     template<typename T>
-    void LinkedList<T>::pop_front()
+    void LinkedList<T>::popFront()
     {
         if (head == nullptr)
         {
@@ -234,12 +248,12 @@ namespace RUT::MIIT
         delete temp;
     }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
-{
-    os << list.toString();
-    return os;
-}
+    template<typename T>
+    std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
+    {
+        os << list.ToString();
+        return os;
+    }
 
     template<typename T>
     void LinkedList<T>::insert(int idx, T elem)
@@ -247,10 +261,10 @@ std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
         if (idx < 0) throw std::out_of_range("Некорректный индекс");
         if (idx == 0)
         {
-            push_front(elem);
+            pushFront(elem);
             return;
         }
-        size_t index = idx;
+        size_t index = static_cast<size_t>(idx);
         Node* current = head;
         size_t curr_index = 0;
         while (curr_index < index - 1)
@@ -260,10 +274,7 @@ std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
             curr_index++;
         }
         Node* tmp = current->next;
-        current->next = new Node();
-        current = current->next;
-        current->data = elem;
-        current->next = tmp;
+        current->next = new Node(elem, tmp);
     }
 
     template<typename T>
@@ -273,10 +284,10 @@ std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
         if (head == nullptr) throw std::out_of_range("Список пуст");
         if (idx == 0)
         {
-            pop_front();
+            popFront();
             return;
         }
-        size_t index = idx;
+        size_t index = static_cast<size_t>(idx);
         Node* current = head;
         size_t curr_index = 0;
         while (curr_index < index - 1)
@@ -289,6 +300,23 @@ std::ostream& operator<<(std::ostream& os, const LinkedList<T>& list)
         if (tmp == nullptr) throw std::out_of_range("Некорректный индекс");
         delete current->next;
         current->next = tmp;
+    }
+
+    template<typename T>
+    inline T LinkedList<T>::peekFront() const
+    {
+        return head->data;
+    }
+
+    template<typename T>
+    inline T LinkedList<T>::peekBack() const
+    {
+        Node* temp = head;
+        while (temp->next != nullptr)
+        {
+            temp = temp->next;
+        }
+        return temp->data;
     }
 
     template<typename T>
